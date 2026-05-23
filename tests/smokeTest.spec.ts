@@ -1,5 +1,5 @@
 import { test } from '../utils/fixtures';
-import { expect } from '@playwright/test';
+import { expect } from '../utils/custom-expect';
 import { APILogger } from '../utils/logger';
 
 let authToken: string;
@@ -43,7 +43,7 @@ test.describe('create, update and delete an article', () => {
             .params({ limit: 10, offset: 0 })
             .headers({ "Authorization": `${authToken}` })
             .getRequest(200);
-        expect(articleResponse.articles[0].title).toBe(`${articleTitle}`);        
+        expect(articleResponse.articles[0].title).shouldBe(`${articleTitle}`);        
     });
 
     test('update the article', async ({ api }) => {
