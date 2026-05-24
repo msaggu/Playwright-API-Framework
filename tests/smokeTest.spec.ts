@@ -4,10 +4,10 @@ import { APILogger } from '../utils/logger';
 
 let authToken: string;
 
-test.beforeAll('Get token', async ({ api }) => {
+test.beforeAll('Get token', async ({ api, config }) => {
     const responseJSON = await api
         .path('/users/login')
-        .body({ "user": { "email": process.env.TEST_EMAIL, "password": process.env.TEST_PASSWORD } })
+        .body({ "user": { "email": config.userEmail, "password": config.userPassword } })
         .postRequest(200);
     authToken = `Token ${responseJSON.user.token}`;
 })

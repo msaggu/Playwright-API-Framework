@@ -77,7 +77,8 @@ export class RequestHandler {
 
         this.logger.logResponse(actualStatusCode, responseJSON);
         this.statusCodeValidator(actualStatusCode, statusCode, this.getRequest);
-        
+        this.resetFields();
+
         return responseJSON;
     }
 
@@ -93,6 +94,7 @@ export class RequestHandler {
 
         this.logger.logResponse(actualStatusCode, responseJSON);
         this.statusCodeValidator(actualStatusCode, statusCode, this.postRequest);
+        this.resetFields();
 
         return responseJSON;
     }
@@ -109,20 +111,30 @@ export class RequestHandler {
 
         this.logger.logResponse(actualStatusCode, responseJSON);
         this.statusCodeValidator(actualStatusCode, statusCode, this.putRequest);
+        this.resetFields();
 
         return responseJSON;
     }
 
     async deleteRequest(statusCode: number) {
         const url = this.getUrl();
-         this.logger.logRequest('DELETE', url, this.apiHeaders);
+        this.logger.logRequest('DELETE', url, this.apiHeaders);
         const response = await this.request.delete(url, {
             headers: this.apiHeaders
         });
         const actualStatusCode = response.status();
 
         this.logger.logResponse(actualStatusCode);
-         this.statusCodeValidator(actualStatusCode, statusCode, this.deleteRequest);
+        this.statusCodeValidator(actualStatusCode, statusCode, this.deleteRequest);
+        this.resetFields();
+    }
+
+    private resetFields() {
+        this.apiPath = '';
+        this.queryParams = {};
+        this.apiHeaders = {};
+        this.apiBody = {};
+        this.baseUrl = undefined;
     }
 
 }
