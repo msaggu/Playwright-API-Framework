@@ -1,17 +1,5 @@
 import { test } from '../utils/fixtures';
 import { expect } from '../utils/custom-expect';
-import { APILogger } from '../utils/logger';
-
-let authToken: string;
-
-test.beforeAll('Get token', async ({ api, config }) => {
-    const responseJSON = await api
-        .path('/users/login')
-        .body({ "user": { "email": config.userEmail, "password": config.userPassword } })
-        .postRequest(200);
-    authToken = `Token ${responseJSON.user.token}`;
-})
-
 
 test.describe('create, update and delete an article', () => {
     test.describe.configure({ mode: 'serial' });
@@ -22,7 +10,6 @@ test.describe('create, update and delete an article', () => {
     test('create an article', async ({ api }) => {
         const createArticleResponse = await api
             .path('/articles')
-            .headers({ "Authorization": `${authToken}` })
             .body({
                 "article": {
                     "title": "test article 01",
@@ -41,7 +28,6 @@ test.describe('create, update and delete an article', () => {
         const articleResponse = await api
             .path('/articles')
             .params({ limit: 10, offset: 0 })
-            .headers({ "Authorization": `${authToken}` })
             .getRequest(200);
         expect(articleResponse.articles[0].title).shouldBe(`${articleTitle}`);        
     });
@@ -49,7 +35,6 @@ test.describe('create, update and delete an article', () => {
     test('update the article', async ({ api }) => {
         const updatedArticleResponse = await api
         .path(`/articles/${slugID}`)
-        .headers({ "Authorization": `${authToken}` })
         .body({
                 "article": {
                     "title": "test article 01",
@@ -66,7 +51,6 @@ test.describe('create, update and delete an article', () => {
         const articleResponse = await api
             .path('/articles')
             .params({ limit: 10, offset: 0 })
-            .headers({ "Authorization": `${authToken}` })
             .getRequest(200);
         expect(articleResponse.articles[0].title).toBe(`${articleTitle}`);   
         expect(articleResponse.articles[0].description).toBe(`${updatedDescription}`);        
@@ -75,7 +59,6 @@ test.describe('create, update and delete an article', () => {
     test('delete the article', async ({ api }) => {
         const deleteArticleResponse = await api
             .path(`/articles/${slugID}`)
-            .headers({ "Authorization": `${authToken}` })
             .deleteRequest(204);
     });
 
@@ -83,7 +66,6 @@ test.describe('create, update and delete an article', () => {
         const articleResponse = await api
             .path('/articles')
             .params({ limit: 10, offset: 0 })
-            .headers({ "Authorization": `${authToken}` })
             .getRequest(200);
         expect(articleResponse.articles[0].title).not.toBe('test article 01');        
     });
