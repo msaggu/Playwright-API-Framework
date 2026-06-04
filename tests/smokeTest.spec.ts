@@ -1,5 +1,14 @@
 import { test } from '../utils/fixtures';
 import { expect } from '../utils/custom-expect';
+import { validateSchema } from '../utils/schema-validator';
+
+test('Get test tags', async ({api}) => {
+    const response = await api
+        .path('/tags')
+        .getRequest(200);
+
+    await validateSchema('tags', 'GET_tags', response);
+});
 
 test.describe('create, update and delete an article', () => {
     test.describe.configure({ mode: 'serial' });
