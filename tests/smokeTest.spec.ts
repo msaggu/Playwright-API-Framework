@@ -7,7 +7,8 @@ test('Get test tags', async ({api}) => {
         .path('/tags')
         .getRequest(200);
 
-    await validateSchema('tags', 'GET_tags', response);
+    await expect(response).toMatchSchema('tags', 'GET_tags');
+
 });
 
 test.describe('create, update and delete an article', () => {
