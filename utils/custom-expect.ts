@@ -20,18 +20,26 @@ declare global {
 export const expect = baseExpect.extend({
 
     async toMatchSchema(received: object, dirName: string, fileName: string) {
+        let pass: boolean;
+        let errorMessage: string = '';
+
         try {
             await validateSchema(dirName, fileName, received);
-            return {
-                message: () => `Expected response NOT to match schema ${fileName}`,
-                pass: true,
-            };
+            pass = true;
         } catch (error: any) {
-            return {
-                message: () => `Schema validation failed for ${fileName}:\n${error.message}`,
-                pass: false,
-            };
+            pass = false;
+            errorMessage = error.message;
         }
+
+        const message = () =>
+            this.utils.matcherHint('toMatchSchema', undefined, undefined, { isNot: this.isNot }) +
+            '\n\n' +
+            (pass
+                ? `Expected response NOT to match schema: ${fileName}`
+                : `Schema validation failed for: ${fileName}\n\n${errorMessage}`
+            );
+
+        return { message, pass };
     },
 
     shouldBe(received: any, expected: any) {
