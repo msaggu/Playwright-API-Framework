@@ -20,14 +20,7 @@ test.describe('create, update and delete an article', () => {
     test('create an article', async ({ api }) => {
         const createArticleResponse = await api
             .path('/articles')
-            .body({
-                "article": {
-                    "title": "test article 01",
-                    "description": "test",
-                    "body": "playwright test",
-                    "tagList": ["api"]
-                }
-            })
+            .body(require('../request-payloads/POST-article.json'))
             .postRequest(201)
         slugID = createArticleResponse.article.slug;
         articleTitle = createArticleResponse.article.title;
@@ -47,11 +40,9 @@ test.describe('create, update and delete an article', () => {
         .path(`/articles/${slugID}`)
         .body({
                 "article": {
-                    "title": "test article 01",
+                    ...require('../request-payloads/PUT-article.json').article,
                     "description": updatedDescription,
-                    "body": "playwright test",
                     "slug": slugID,
-                    "tagList": ["api"]
                 }
             })
         .putRequest(200);

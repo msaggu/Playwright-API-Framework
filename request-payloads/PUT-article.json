@@ -1,0 +1,9 @@
+{
+    "article": {
+        "title": "test article 01",
+        "body": "playwright test",
+        "tagList": [
+            "api"
+        ]
+    }
+}
